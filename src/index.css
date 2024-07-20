@@ -1,7 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -10,6 +15,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
+  background-color: #fefefe;
 }
 
 code {
@@ -22,6 +28,6 @@ code {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(45deg, #f00, #000);
+  background: #046d8b;
   border-radius: 5pc;
 }
