@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchArticles } from "./redux/features/articles";
-import { ArticleList } from "./components/ArticleList";
+import { ArticleList } from "./components/articleList/ArticleList";
+import Loader from "./components/loader/Loader";
+
+const periods = [1, 7, 30];
 
 const App = () => {
   const dispatch = useDispatch();
-  const { articles } = useSelector((state) => state.articles);
-  const { count } = useSelector((state) => state.articles);
+  const { articles, count, loading } = useSelector((state) => state.articles);
   const [mounted, setMounted] = useState(false);
+  const [allArticles, setAllArticles] = useState([]);
   const [selectedArticle, setSelectedArticle] = useState(null);
+  const [sections, setSections] = useState(null);
   const [period, setPeriod] = useState(1);
-  const [loading, setLoading] = useState(true);
-  const [view, setView] = useState("vertical"); // "vertical" or "grid"
+  const [sectionFilter, setSectionFilter] = useState("");
 
   const getArticles = () => {
     dispatch(fetchArticles(period));
@@ -30,22 +33,43 @@ const App = () => {
 
   useEffect(() => {
     if (articles && count) {
-      console.log("articles", articles);
-      console.log("count", count);
-      setLoading(false);
+      setAllArticles(articles);
+      const uniqueSections = [...new Set(articles.map((a) => a.section))];
+      setSections(uniqueSections);
     }
   }, [articles, count]);
+
+  useEffect(() => {
+    if (!mounted) {
+      setMounted(true);
+    }
+  }, [period]);
+
+  useEffect(() => {
+    if (sectionFilter) {
+      const filteredArticles = articles.filter(
+        (article) => article.section === sectionFilter
+      );
+      setAllArticles(filteredArticles);
+    } else {
+      setAllArticles(articles);
+    }
+  }, [sectionFilter, articles]);
 
   const onArticleSelect = (article) => {
     setSelectedArticle(article);
   };
 
-  const changeView = (newView) => {
-    setView(newView);
+  const handlePeriodChange = (p) => {
+    setPeriod(p);
+  };
+
+  const handleSectionClick = (section) => {
+    setSectionFilter((prevFilter) => (prevFilter === section ? "" : section));
   };
 
   return (
-    <>
+    <div className="p-2 h-full w-full">
       {selectedArticle ? (
         <div>
           <h2>{selectedArticle.title}</h2>
@@ -53,21 +77,53 @@ const App = () => {
           <button onClick={() => setSelectedArticle(null)}>Back</button>
         </div>
       ) : (
-        <div>
-          <button onClick={() => changeView("vertical")}>Vertical View</button>
-          <button onClick={() => changeView("grid")}>Grid View</button>
-          {loading ? (
-            <p>Loading...</p>
-          ) : (
-            <ArticleList
-              articles={articles}
-              onArticleSelect={onArticleSelect}
-              view={view}
-            />
-          )}
+        <div className="flex items-stretch w-full gap-1">
+          <div className="p-3 w-[20%] flex flex-col gap-5 border max-h-[98vh] sticky top-2">
+            {periods.map((p, i) => (
+              <button
+                className={`period-btn ${p === period ? "active-period" : ""}`}
+                onClick={() => handlePeriodChange(p)}
+                key={i}
+              >
+                Last {p} day{p > 1 && "s"}
+              </button>
+            ))}
+            {sections && (
+              <div>
+                <h6>#Tags</h6>
+                <div className="flex gap-2 flex-wrap">
+                  {sections.map((section, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleSectionClick(section)}
+                      className={`bg-gray-100 font-medium text-[12px] p-1 rounded transition-all duration-300 hover:bg-[#046d8b] hover:text-white ${
+                        sectionFilter === section
+                          ? "bg-[#046d8b] text-white"
+                          : ""
+                      }`}
+                    >
+                      #{section}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+          <div className="w-[80%]">
+            {loading ? (
+              <div className="flex h-full w-full items-center justify-center">
+                <Loader />
+              </div>
+            ) : (
+              <ArticleList
+                articles={allArticles}
+                onArticleSelect={onArticleSelect}
+              />
+            )}
+          </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

@@ -1,0 +1,67 @@
+.article-item {
+  transition: all 0.5s ease-in-out;
+  box-shadow: 0 1px 10px -8px #046d8b;
+}
+.article-item:hover {
+  box-shadow: 0 1px 15px -8px #0387ab;
+  background: #fdffff;
+}
+.article-item .artcle-details {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  justify-content: space-between;
+  height: 100%;
+}
+.article-abstract {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.verticalContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(24%, 1fr));
+  gap: 12px;
+}
+.vertical {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  cursor: pointer;
+}
+.vertical:hover {
+  transform: translateX(-10px);
+  border-left: 4px solid #0387ab;
+}
+.gridItem {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+.gridItem:hover {
+  scale: 1.1;
+}
+image {
+  width: 100%;
+}
+.period-btn {
+  border: 1.7px solid #046d8b;
+  color: #046d8b;
+  padding: 5px 15px;
+  border-radius: 0.1pc;
+  transition: all 0.3s ease-in-out;
+}
+
+.period-btn.active-period {
+  background: #046d8b;
+  color: #ffffff;
+}
