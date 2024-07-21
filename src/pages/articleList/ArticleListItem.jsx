@@ -1,10 +1,9 @@
 import React from "react";
 import "./style.css";
-const ArticleListItem = ({ article, onclick, view }) => {
+const ArticleListItem = ({ article, view }) => {
   return (
     <div
       key={article.id}
-      onClick={() => onclick(article)}
       className={`article-item ${
         view === "vertical" ? "vertical" : "gridItem"
       }`}
@@ -25,7 +24,9 @@ const ArticleListItem = ({ article, onclick, view }) => {
           <p className="text-gray-700 text-[13px] font-medium pl-1 underline">
             {article.published_date}
           </p>
-          <p className="text-[13px] pt-1 article-abstract">{article.abstract}</p>
+          <p className="text-[13px] pt-1 article-abstract">
+            {article.abstract}
+          </p>
         </div>
         <p className="text-gray-400 text-[13px]">{article.byline}</p>
       </div>
